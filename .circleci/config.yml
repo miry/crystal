@@ -63,6 +63,37 @@ jobs:
           root: .
           paths:
             - docs
+  test_linux_release:
+    machine:
+      image: ubuntu-2004:202201-02
+    environment:
+      <<: *env
+      TRAVIS_OS_NAME: linux
+      ARCH: x86_64
+      ARCH_CMD: linux64
+      CRYSTAL_OPTS: "--release"
+    resource_class: large
+    steps:
+      - checkout
+      - run: bin/ci prepare_system
+      - run: echo 'export CURRENT_TAG="$CIRCLE_TAG"' >> $BASH_ENV
+      - run: bin/ci prepare_build
+      - run:
+          command: bin/ci build
+          no_output_timeout: 30m
+      - run:
+          when: always
+          command: |
+            mkdir -p ~/test-results/spec
+            cp .junit/*.xml ~/test-results/spec/
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: ~/test-results/spec
+      - persist_to_workspace:
+          root: .
+          paths:
+            - docs
 
   test_alpine:
     machine:
@@ -484,6 +515,11 @@ jobs:
 
 workflows:
   version: 2
+  
+  test_release:
+    jobs:
+      - test_linux_release
+  
   release:
     jobs:
       - test_linux:
@@ -570,6 +606,7 @@ workflows:
                 - master
     jobs:
       - test_linux
+      - test_linux_release
       - test_alpine
       # - test_darwin # See https://github.com/crystal-lang/crystal/pull/9763
       - test_preview_mt
