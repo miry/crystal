@@ -491,7 +491,7 @@ jobs:
 
 workflows:
   version: 2
-  distribution_scripts:
+  distribution_scripts_tests:
     when: << pipeline.parameters.run_distribution_scripts_tests >>
     jobs:
       - prepare_common
@@ -500,8 +500,22 @@ workflows:
             - prepare_common
       - dist_darwin:
           requires:
-            - prepare_common
             - prepare_maintenance
+      - dist_linux:
+          requires:
+            - prepare_maintenance
+      - dist_docker:
+          requires:
+            - dist_linux
+      - dist_snap:
+          requires:
+            - dist_linux
+      - dist_docs:
+          requires:
+            - dist_linux
+      - test_dist_linux_on_docker:
+          requires:
+            - dist_docker
 
   release:
     jobs:
