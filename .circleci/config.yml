@@ -488,6 +488,13 @@ jobs:
 
 workflows:
   version: 2
+  darwin:
+    jobs:
+      - prepare_common
+      - dist_darwin:
+          requires:
+            - prepare_common
+
   release:
     jobs:
       - test_linux:
