@@ -238,6 +238,11 @@ jobs:
       - run: |
           cd /tmp/workspace/distribution-scripts
 
+          # Make sure distribution-scripts uses current repositroy
+          ls -la $CIRCLE_WORKING_DIRECTORY
+          git log $CIRCLE_WORKING_DIRECTORY
+          export CRYSTAL_SRC=${CIRCLE_WORKING_DIRECTORY}
+
           # The version is based on the branch name.
           VERSION=$CIRCLE_BRANCH
 
