@@ -8,7 +8,7 @@ parameters:
   distribution-scripts-version:
     description: "Git ref for version of https://github.com/crystal-lang/distribution-scripts/"
     type: string
-    default: "535aedb8b09d77caaa1583700f371cd04343b7e8"
+    default: "9d6e6458d12a5e8554c2f5c79a4734b3a8f8e94f"
   run_distribution_scripts_tests:
     type: boolean
     default: false
@@ -515,7 +515,7 @@ workflows:
             - dist_linux
       - dist_docs:
           requires:
-            - dist_linux
+            - dist_docker
       - test_dist_linux_on_docker:
           requires:
             - dist_docker
