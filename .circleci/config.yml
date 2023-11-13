@@ -238,8 +238,8 @@ jobs:
       - run: |
           cd /tmp/workspace/distribution-scripts
 
-          # Make sure distribution-scripts uses current repositroy
-          echo "export CRYSTAL_REPO=${CIRCLE_REPOSITORY_URL}" >> build.env
+          # Make sure distribution-scripts uses current repositroy https://github.com/{user}/crystal
+          echo "export CRYSTAL_REPO=https://github.com/${CIRCLE_PROJECT_USERNAME}/crystal" >> build.env
 
           # The version is based on the branch name.
           VERSION=$CIRCLE_BRANCH
