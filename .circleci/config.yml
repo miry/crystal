@@ -9,6 +9,9 @@ parameters:
     description: "Git ref for version of https://github.com/crystal-lang/distribution-scripts/"
     type: string
     default: "535aedb8b09d77caaa1583700f371cd04343b7e8"
+  run_distribution_scripts_tests:
+    type: boolean
+    default: false
   previous_crystal_base_url:
     description: "Prefix for URLs to Crystal bootstrap compiler"
     type: string
@@ -488,12 +491,17 @@ jobs:
 
 workflows:
   version: 2
-  darwin:
+  distribution_scripts:
+    when: << pipeline.parameters.run_distribution_scripts_tests >>
     jobs:
       - prepare_common
+      - prepare_maintenance:
+          requires:
+            - prepare_common
       - dist_darwin:
           requires:
             - prepare_common
+            - prepare_maintenance
 
   release:
     jobs:
